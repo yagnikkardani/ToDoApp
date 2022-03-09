@@ -29,7 +29,7 @@ function AddToList() {
                 <input type="submit"/>
             </form>
             
-            {todolength && <p>Your ToDo List: </p>}
+            {todolength && <p>ToDo List: </p>}
             
             {toDoItems.map((i) => <p>{i}</p>)}
         </div>
