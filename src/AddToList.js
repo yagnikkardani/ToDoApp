@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Form, ListGroup } from "react-bootstrap";
 import axios from "axios";
 import styles from "./components.module.css";
+import { useForm } from "react-hook-form";
 
 const baseURL = "http://localhost:8000/apitodos/";
 
@@ -13,6 +14,7 @@ function AddToList() {
   ]);
   const [todolength, setToDoLength] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
   const getAnswer = async () => {
     const { data } = await axios(baseURL);
@@ -23,8 +25,8 @@ function AddToList() {
     getAnswer();
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleOnSubmit = (e) => {
+    console.log(e);
     axios
       .post(baseURL, { todoitem: name, completed: false })
       .then((response) => {
@@ -52,15 +54,17 @@ function AddToList() {
 
   return (
     <Container>
-      <Form onSubmit={handleSubmit} style={{ marginTop: 50 }}>
+      <Form onSubmit={handleSubmit(handleOnSubmit)} style={{ marginTop: 50 }}>
         <Form.Group className="mb-3">
           <Form.Label>Add Task</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter Task"
             value={name}
+            {...register("example", { required: true, pattern: /^(?!\s*$).+/ })}
             onChange={(e) => setName(e.target.value)}
           />
+          {errors.example && <span>This field is required</span>}
         </Form.Group>
         <Button variant="primary" type="Submit">
           Submit
